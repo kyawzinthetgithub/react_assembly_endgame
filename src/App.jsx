@@ -1,7 +1,13 @@
+import Header from "./components/Header";
+import Won from "@/components/WonStatus.jsx";
+
 export default function App() {
   return (
     <>
-      <h1 className="text-red-500">app component</h1>
+      <main>
+        <Header />
+        <Won />
+      </main>
     </>
   );
 }

@@ -1,1 +1,15 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+*{
+    box-sizing: border-box;
+    font-family: "Hanken Grotesk", Arial, sans-serif;
+}
+
+body{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: #262626;
+    color: #d9d9d9;
+    padding: 20px;
+}
