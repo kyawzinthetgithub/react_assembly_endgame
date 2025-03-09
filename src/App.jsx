@@ -6,6 +6,8 @@ import { useState } from "react";
 export default function App() {
   const [currentWord, setCurrentWord] = useState("react");
 
+  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
   const languageEl = languages.map((lang) => (
     <span
       className="px-3 py-1 rounded"
@@ -16,9 +18,18 @@ export default function App() {
     </span>
   ));
 
-  const letterEl = currentWord.split('').map((letter,index) => (
-    <span key={index} className="bg-[#323232] font-semibold flex justify-center items-center px-4 py-2 border-b border-white">{letter.toUpperCase()}</span>
+  const letterEl = currentWord.split("").map((letter, index) => (
+    <span
+      key={index}
+      className="bg-[#323232] font-semibold flex justify-center items-center px-4 py-2 border-b border-white select-none"
+    >
+      {letter.toUpperCase()}
+    </span>
   ));
+
+  const keyboard = alphabet.split('').map((letter,idx) => (
+    <button key={idx} type="button" className="w-10 h-10 flex justify-center items-center bg-[#fcba29] rounded font-semibold text-xl text-gray-600">{letter.toUpperCase()}</button>
+  ))
 
   return (
     <>
@@ -38,6 +49,9 @@ export default function App() {
           {letterEl}
         </section>
 
+        <section className="flex flex-wrap justify-center items-center gap-3 mt-5 max-w-[450px] mx-auto">
+          {keyboard}
+        </section>
       </main>
     </>
   );
