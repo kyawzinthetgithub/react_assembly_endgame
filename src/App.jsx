@@ -5,31 +5,45 @@ import { useState } from "react";
 import clsx from "clsx";
 
 export default function App() {
+  //state values
   const [currentWord, setCurrentWord] = useState("react");
   const [guessLetters, setGuessLetters] = useState([]);
 
+  //derived values
+  const wrongGuesLength = guessLetters.filter(
+    (letter) => !currentWord.includes(letter)
+  ).length;
+
+  //static values
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
   //mapping for languages
-  const languageEl = languages.map((lang) => (
-    <span
-      className="px-3 py-1 rounded"
-      key={lang.name}
-      style={{ background: lang.backgroundColor, color: lang.color }}
-    >
-      {lang.name}
-    </span>
-  ));
+  const languageEl = languages.map((lang, index) => {
+    const isLanguageLost = index < wrongGuesLength;
+    return (
+      <span
+        className="px-3 py-1 rounded relative overflow-hidden"
+        key={lang.name}
+        style={{ background: lang.backgroundColor, color: lang.color }}
+      >
+        {lang.name}
+        {isLanguageLost && <span className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.8)]">☠️</span>}
+      </span>
+      
+    );
+  });
 
   //mapping for currentWord
-  const letterEl = currentWord.split("").map((letter, index) => (
-    <span
-      key={index}
-      className="bg-[#323232] font-semibold flex justify-center items-center px-4 py-2 border-b border-white select-none"
-    >
-      {letter.toUpperCase()}
-    </span>
-  ));
+  const letterEl = currentWord.split("").map((letter, index) => {
+    return (
+      <span
+        key={index}
+        className="w-10 h-10 bg-[#323232] font-semibold flex justify-center items-center border-b border-white select-none"
+      >
+        {guessLetters.includes(letter) ? letter.toUpperCase() : ""}
+      </span>
+    );
+  });
 
   ////mapping for keyboard
   const keyboard = alphabet.split("").map((letter, idx) => {
@@ -43,7 +57,7 @@ export default function App() {
         type="button"
         onClick={() => addGuessLetter(letter)}
         className={clsx(
-          "cursor-pointer w-10 h-10 flex justify-center items-center bg-[#fcba29] hover:bg-[#f5d182] rounded font-semibold text-xl text-gray-600",
+          "cursor-pointer w-10 h-10 flex justify-center items-center bg-[#fcba29] rounded font-semibold text-xl text-gray-600",
           { "bg-green-500": isCorrect, "bg-red-500": isWrong }
         )}
       >
