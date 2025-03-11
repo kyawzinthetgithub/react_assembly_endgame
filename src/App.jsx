@@ -1,5 +1,6 @@
 import Header from "./components/Header";
 import Won from "@/components/WonStatus.jsx";
+import Lost from "@/components/LostStatus.jsx";
 import { languages } from "../dummy/languages";
 import { useState } from "react";
 import clsx from "clsx";
@@ -14,6 +15,10 @@ export default function App() {
     (letter) => !currentWord.includes(letter)
   ).length;
 
+  const isGameWon = currentWord.split('').every(letter => guessLetters.includes(letter));
+  const isGameLost = wrongGuesLength >= languages.length - 1;
+  const isGameOver = isGameWon || isGameLost;
+
   //static values
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
@@ -27,9 +32,12 @@ export default function App() {
         style={{ background: lang.backgroundColor, color: lang.color }}
       >
         {lang.name}
-        {isLanguageLost && <span className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.8)]">☠️</span>}
+        {isLanguageLost && (
+          <span className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.8)]">
+            ☠️
+          </span>
+        )}
       </span>
-      
     );
   });
 
@@ -79,7 +87,8 @@ export default function App() {
           <Header />
         </section>
         <section className="flex justify-center w-full">
-          <Won />
+          {isGameOver && isGameWon && <Won />}
+          {isGameOver && isGameLost && <Lost />}
         </section>
 
         <section className="languagesSection flex flex-wrap justify-center items-center gap-3 w- px-10 mb-9">
@@ -95,9 +104,9 @@ export default function App() {
         </section>
 
         <section className="newGameBtn flex justify-center mt-5">
-          <button className="bg-blue-500 px-10 py-2 rounded capitalize text-black cursor-pointer hover:bg-blue-400 font-semibold">
+          {isGameOver && <button className="bg-blue-500 px-10 py-2 rounded capitalize text-black cursor-pointer hover:bg-blue-400 font-semibold">
             new game
-          </button>
+          </button>}
         </section>
       </main>
     </>
