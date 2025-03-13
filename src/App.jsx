@@ -4,11 +4,11 @@ import Lost from "@/components/LostStatus.jsx";
 import { languages } from "../dummy/languages";
 import { useState } from "react";
 import clsx from "clsx";
-import { getFarewellText } from "../utils";
+import { getFarewellText,getRandomWord } from "../utils";
 
 export default function App() {
   //state values
-  const [currentWord, setCurrentWord] = useState("react");
+  const [currentWord, setCurrentWord] = useState(() => getRandomWord());
   const [guessLetters, setGuessLetters] = useState([]);
 
   //derived values
@@ -72,8 +72,11 @@ export default function App() {
         type="button"
         onClick={() => addGuessLetter(letter)}
         disabled={isGameOver}
+        aria-disabled={guessLetters.includes(letter.toUpperCase())}
+        title={letter.toUpperCase()}
+        aria-label={`Letter ${letter}`}
         className={clsx(
-          "cursor-pointer w-10 h-10 flex justify-center items-center bg-[#fcba29] rounded font-semibold text-xl text-gray-600 disabled:cursor-not-allowed disabled:bg-gray-200",
+          "cursor-pointer w-10 h-10 flex justify-center items-center bg-[#fcba29] rounded font-semibold text-xl text-gray-600 disabled:cursor-not-allowed disabled:opacity-50",
           { "bg-green-500": isCorrect, "bg-red-500": isWrong }
         )}
       >
@@ -94,7 +97,7 @@ export default function App() {
         <section className="flex justify-center items-center">
           <Header />
         </section>
-        <section className="flex justify-center w-full">
+        <section role="status" aria-live="polite" className="flex justify-center w-full">
           {isGameOver && isGameWon && <Won />}
           {isGameOver && isGameLost && <Lost />}
           {!isGameOver && lastGuessIncorrect && (
