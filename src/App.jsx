@@ -4,7 +4,7 @@ import Lost from "@/components/LostStatus.jsx";
 import { languages } from "../dummy/languages";
 import { useState } from "react";
 import clsx from "clsx";
-import { getFarewellText,getRandomWord } from "../utils";
+import { getFarewellText, getRandomWord } from "../utils";
 
 export default function App() {
   //state values
@@ -50,12 +50,16 @@ export default function App() {
 
   //mapping for currentWord
   const letterEl = currentWord.split("").map((letter, index) => {
+    const shouldRevealLetter = isGameLost || guessLetters.includes(letter);
     return (
       <span
         key={index}
-        className="w-10 h-10 bg-[#323232] font-semibold flex justify-center items-center border-b border-white select-none"
+        className={clsx(
+          "w-10 h-10 bg-[#323232] font-semibold flex justify-center items-center border-b border-white select-none",
+          isGameLost && !guessLetters.includes(letter) && "text-red-500"
+        )}
       >
-        {guessLetters.includes(letter) ? letter.toUpperCase() : ""}
+        {shouldRevealLetter ? letter.toUpperCase() : ""}
       </span>
     );
   });
@@ -91,13 +95,22 @@ export default function App() {
     );
   };
 
+  const resetGame = () => {
+    setCurrentWord(getRandomWord());
+    setGuessLetters([]);
+  };
+
   return (
     <>
       <main>
         <section className="flex justify-center items-center">
           <Header />
         </section>
-        <section role="status" aria-live="polite" className="flex justify-center w-full">
+        <section
+          role="status"
+          aria-live="polite"
+          className="flex justify-center w-full"
+        >
           {isGameOver && isGameWon && <Won />}
           {isGameOver && isGameLost && <Lost />}
           {!isGameOver && lastGuessIncorrect && (
@@ -121,7 +134,10 @@ export default function App() {
 
         <section className="newGameBtn flex justify-center mt-5">
           {isGameOver && (
-            <button className="bg-blue-500 px-10 py-2 rounded capitalize text-black cursor-pointer hover:bg-blue-400 font-semibold">
+            <button
+              onClick={resetGame}
+              className="bg-blue-500 px-10 py-2 rounded capitalize text-black cursor-pointer hover:bg-blue-400 font-semibold"
+            >
               new game
             </button>
           )}
